@@ -1,0 +1,1711 @@
+/* ============================================================
+   EO Finance — Staff Stylesheet
+   Khusus untuk semua halaman dalam folder /staff.
+   Bergantung pada style.css yang harus di-load terlebih dahulu.
+
+   Struktur file:
+   01. Staff Layout — sidebar + konten
+   02. Sidebar Overrides (staff-specific)
+   03. Sidebar Staff — fixed panel + mobile toggle
+   04. Page Header & Greeting
+   05. Stats Grid — 3 kolom
+   06. Chart Area — single canvas
+   07. Progress Bar — staff variant
+   08. Data Tables — zebra stripe & hover
+   09. Event Pages (view-only)
+   10. Transaksi Pages (input staff)
+   11. Profil Page
+   12. Ganti Password Page
+   13. Responsive ≤ 768px
+============================================================ */
+
+
+/* ============================================================
+   01. STAFF LAYOUT — sidebar fixed + konten kanan
+============================================================ */
+
+/*
+  Sidebar staff identik secara posisi dengan admin.
+  staff.css menambahkan aksen warna berbeda pada elemen
+  tertentu agar staff bisa membedakan tampilan dari admin
+  secara visual — konsistensi layout, perbedaan identitas.
+*/
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+  background: var(--bg-light);
+}
+
+.admin-content {
+  flex: 1;
+  min-width: 0;
+  margin-left: var(--sidebar-width);
+  padding: var(--space-8);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  max-width: calc(100vw - var(--sidebar-width));
+}
+
+
+/* ============================================================
+   02. SIDEBAR OVERRIDES — staff accent
+============================================================ */
+
+/*
+  Sidebar staff menggunakan aksen hijau (success) sebagai
+  pembeda visual dari admin yang biru.
+  Ini membantu staff mengenali context mereka dengan cepat.
+*/
+.role-staff_eo .sidebar {
+  border-right: 1px solid rgba(255, 255, 255, .06);
+}
+
+.role-staff_eo .nav__item--active .nav__link {
+  background: rgba(29, 158, 117, .14);
+  color: #fff;
+}
+
+/* Indikator aktif: hijau untuk staff */
+.role-staff_eo .nav__active-indicator {
+  background: var(--success);
+  box-shadow: 0 0 8px rgba(29, 158, 117, .5);
+}
+
+/* Avatar staff: hijau */
+.role-staff_eo .sidebar__avatar {
+  background: var(--success);
+}
+
+/*
+  Sidebar staff punya lebih sedikit menu sehingga ada
+  lebih banyak whitespace di area nav.
+  Tambahkan padding ekstra agar tidak terasa kosong.
+*/
+.role-staff_eo .sidebar__nav {
+  padding-top: var(--space-3);
+}
+
+.role-staff_eo .nav__list {
+  gap: var(--space-1);
+}
+
+.role-staff_eo .nav__link {
+  padding: 11px var(--space-3);
+}
+
+
+/* ============================================================
+   03. SIDEBAR STAFF — fixed panel + mobile toggle
+   (dipindah dari sidebar-staff.php agar tidak inline)
+============================================================ */
+
+@keyframes slideInStaff {
+    from { transform: translateX(-100%); }
+    to   { transform: translateX(0); }
+}
+
+#sidebar-overlay-staff {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.5);
+    z-index: 99;
+    backdrop-filter: blur(2px);
+}
+
+#sidebar-staff {
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    width: 248px;
+    background: linear-gradient(180deg, #1a3346 0%, #0f2132 100%);
+    display: flex;
+    flex-direction: column;
+    z-index: 100;
+    transition: transform .25s ease;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,.15) transparent;
+}
+
+#sidebar-staff::-webkit-scrollbar { width: 4px; }
+#sidebar-staff::-webkit-scrollbar-track { background: transparent; }
+#sidebar-staff::-webkit-scrollbar-thumb { background: rgba(255,255,255,.15); border-radius: 2px; }
+
+#sidebar-toggle-staff {
+    display: none;
+    position: fixed;
+    top: 14px; left: 14px;
+    z-index: 101;
+    background: #1a3346;
+    border: none;
+    border-radius: 8px;
+    padding: 8px;
+    cursor: pointer;
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,.25);
+}
+
+.sidebar-event-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 14px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 13px;
+    color: rgba(255,255,255,.7);
+    transition: background .15s, color .15s;
+    margin-bottom: 2px;
+}
+
+.sidebar-event-item:hover,
+.sidebar-event-item.is-active {
+    background: rgba(255,255,255,.1);
+    color: #fff;
+}
+
+.sidebar-event-item.is-active {
+    background: rgba(59,130,246,.25);
+    border-left: 3px solid #3b82f6;
+    padding-left: 11px;
+}
+
+.event-role-badge {
+    font-size: 10px;
+    background: rgba(255,255,255,.15);
+    color: rgba(255,255,255,.8);
+    padding: 1px 6px;
+    border-radius: 10px;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+    #sidebar-staff {
+        transform: translateX(-100%);
+        box-shadow: 4px 0 24px rgba(0,0,0,.3);
+    }
+    #sidebar-staff.is-open {
+        transform: translateX(0);
+        animation: slideInStaff .25s ease;
+    }
+    #sidebar-overlay-staff.is-visible { display: block; }
+    #sidebar-toggle-staff { display: flex; align-items: center; justify-content: center; }
+}
+
+
+/* ============================================================
+   04. PAGE HEADER & GREETING
+============================================================ */
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding-bottom: var(--space-2);
+}
+
+.page-header__left {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.page-header__right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+/*
+  Greeting: font-weight 300 (light) — konsisten dengan admin.css.
+  Warna sedikit berbeda menggunakan success agar tone lebih hangat.
+*/
+.page-greeting {
+  font-size: 18px;
+  font-weight: 300;
+  color: var(--text-secondary);
+  letter-spacing: -.01em;
+  line-height: 1.3;
+  margin: 0;
+}
+
+.page-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -.02em;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.page-subtitle {
+  font-size: 14px;
+  color: var(--text-tertiary);
+  margin: 0;
+}
+
+/* Breadcrumb */
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 13px;
+  color: var(--text-tertiary);
+  margin-bottom: var(--space-1);
+  flex-wrap: wrap;
+}
+
+.breadcrumb__item {
+  color: var(--text-tertiary);
+  transition: color var(--transition-fast);
+}
+
+.breadcrumb__item:not(.breadcrumb__item--active):hover {
+  color: var(--success);
+}
+
+.breadcrumb__item--active {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.breadcrumb__sep {
+  color: var(--text-tertiary);
+  font-size: 12px;
+}
+
+
+/* ============================================================
+   05. STATS GRID — 3 kolom desktop
+============================================================ */
+
+/*
+  Staff hanya memiliki 3 kartu statistik, sehingga grid
+  default 3 kolom — lebih lebar per kartu dari admin (4 kolom).
+  Ukuran lebih besar membuat angka lebih mudah dibaca.
+*/
+.stats-grid {
+  --stats-cols: 3;
+  display: grid;
+  grid-template-columns: repeat(var(--stats-cols), 1fr);
+  gap: var(--space-4);
+}
+
+/* Kartu stat staff: hover + lift */
+.stat-card {
+  transition: box-shadow var(--transition-base), transform var(--transition-base);
+}
+
+.stat-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+/* Modifier: border kiri berwarna sesuai kondisi kas */
+.stat-card--positive {
+  border-left: 3px solid var(--success, #16a34a);
+}
+
+.stat-card--negative {
+  border-left: 3px solid var(--danger, #dc2626);
+}
+
+/*
+  Value lebih besar karena kartu lebih lebar di 3-column grid.
+  Override font-size dari style.css.
+*/
+.stat-card__value {
+  font-size: 26px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Label di atas value */
+.stat-card__label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+/* Header baris: label + ikon */
+.stat-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-2, 8px);
+}
+
+/* Ikon di kanan header kartu */
+.stat-card__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-md, 8px);
+  flex-shrink: 0;
+}
+
+/* Warna ikon: konsisten dengan palet admin */
+.stat-card__icon--blue  { background: rgba(59,130,246,.12);  color: #3b82f6; }
+.stat-card__icon--green { background: rgba(22,163,74,.12);   color: var(--success, #16a34a); }
+.stat-card__icon--teal  { background: rgba(20,184,166,.12);  color: #14b8a6; }
+
+/* Aksen ikon staff: hijau sebagai warna primer */
+.stat-card__icon--staff-primary {
+  background: var(--success-light);
+  color: var(--success);
+}
+
+/* Detail baris: pemasukan & pengeluaran di bawah value */
+.stat-card__detail {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2, 8px);
+  flex-wrap: wrap;
+  margin-top: var(--space-1, 4px);
+}
+
+.stat-card__detail-item {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.stat-card__detail-item--green { color: var(--success, #16a34a); }
+.stat-card__detail-item--red   { color: var(--danger,  #dc2626); }
+
+.stat-card__detail-sep {
+  color: var(--text-tertiary);
+  font-size: 12px;
+}
+
+/* Sub-label di bawah nilai */
+.stat-card__meta {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  margin: 0;
+}
+
+
+/* ============================================================
+   06. CHART AREA — single canvas grafik aktivitas
+============================================================ */
+
+/*
+  Staff hanya memiliki satu grafik (chartAktivitas).
+  Chart-card full width tanpa grid dua kolom.
+*/
+.chart-card {
+  background: var(--white);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xs);
+  overflow: hidden;
+}
+
+.chart-card--full {
+  width: 100%;
+}
+
+.chart-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: var(--space-5) var(--space-6) var(--space-3);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.chart-card__title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.chart-card__subtitle {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  margin-top: 2px;
+  display: block;
+}
+
+/*
+  Canvas area: tinggi 300px, konsisten dengan admin.
+  Background putih, rounded mengikuti parent card.
+*/
+.chart-card__body {
+  padding: var(--space-5) var(--space-6) var(--space-6);
+  background: var(--white);
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.chart-card__body canvas {
+  width: 100% !important;
+  height: 100% !important;
+  max-height: 260px;
+}
+
+/* Placeholder saat script grafik belum diimplementasi */
+.chart-card__body--empty {
+  flex-direction: column;
+  gap: var(--space-3);
+  color: var(--text-tertiary);
+}
+
+.chart-placeholder-icon {
+  opacity: .25;
+  color: var(--text-tertiary);
+}
+
+.chart-placeholder-text {
+  font-size: 13px;
+  color: var(--text-tertiary);
+}
+
+
+/* ============================================================
+   07. PROGRESS BAR — staff variant
+============================================================ */
+
+/*
+  Base progress bar — dipakai di dashboard (tabel event) dan
+  halaman detail event. Tidak membutuhkan modifier class.
+  --sm: tinggi 5px untuk tabel ringkas.
+  --lg: tinggi 8px untuk tampilan detail/besar.
+*/
+.progress-bar {
+  height: 6px;
+  background: var(--border-light);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  margin-block: 3px;
+}
+
+.progress-bar--sm {
+  height: 5px;
+  background: var(--border-light);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  margin-block: 3px;
+}
+
+.progress-bar--lg {
+  height: 8px;
+  background: var(--border-light);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  margin-block: var(--space-2);
+}
+
+/* Fill warna: dipakai di semua varian progress-bar */
+.progress-bar__fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width 0.4s ease;
+}
+
+.progress-bar__fill--hijau,
+.progress-bar--lg .progress-bar__fill--hijau,
+.progress-bar--sm .progress-bar__fill--hijau  { background: var(--success); }
+
+.progress-bar__fill--kuning,
+.progress-bar--lg .progress-bar__fill--kuning,
+.progress-bar--sm .progress-bar__fill--kuning { background: var(--warning); }
+
+.progress-bar__fill--merah,
+.progress-bar--lg .progress-bar__fill--merah,
+.progress-bar--sm .progress-bar__fill--merah  { background: var(--danger);  }
+
+/*
+  Budget cell dalam tabel event — tampilkan sisa, bar, persentase
+  dalam satu kolom vertikal yang rapi.
+*/
+.budget-cell {
+  min-width: 160px;
+  display: flex;
+  flex-direction: column;
+}
+
+.budget-cell__amount {
+  font-size: 13px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.budget-cell__amount--hijau  { color: var(--success); }
+.budget-cell__amount--kuning { color: var(--warning); }
+.budget-cell__amount--merah  { color: var(--danger);  }
+
+.budget-cell__pct {
+  font-size: 11px;
+  color: var(--text-tertiary);
+}
+
+/*
+  Info anggaran singkat di halaman detail event staff —
+  read-only, tidak bisa diedit.
+*/
+.budget-info-bar {
+  background: var(--bg-light);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4) var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.budget-info-bar__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+}
+
+.budget-info-bar__label {
+  color: var(--text-secondary);
+}
+
+.budget-info-bar__value {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.budget-info-bar__value--green { color: var(--success); }
+.budget-info-bar__value--red   { color: var(--danger);  }
+
+
+/* ============================================================
+   08. DATA TABLES — zebra stripe & hover hijau muda
+============================================================ */
+
+/*
+  Staff menggunakan hover hijau muda (#EAFAF4) alih-alih
+  biru (#EBF4FF) seperti di admin — identitas visual berbeda.
+  Zebra stripe sama: baris genap #FAFAFA.
+*/
+.admin-content .data-table thead {
+  background: #FAFAFA;
+  border-bottom: 2px solid var(--border-light);
+}
+
+.admin-content .data-table th {
+  padding: 12px 18px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  letter-spacing: .07em;
+}
+
+/* Zebra stripe */
+.admin-content .data-table tbody tr:nth-child(even) {
+  background: #FAFAFA;
+}
+
+/* Hover hijau muda — pembeda dari admin (biru) */
+.admin-content .data-table tbody tr:hover {
+  background: #EAFAF4;
+}
+
+.admin-content .data-table .data-table__cell {
+  padding: 14px 18px;
+}
+
+/* Filter bar di atas tabel */
+.table-filter-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.table-search {
+  flex: 1;
+  min-width: 200px;
+  max-width: 360px;
+  position: relative;
+}
+
+.table-search__icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-tertiary);
+  pointer-events: none;
+  display: flex;
+}
+
+.table-search__input {
+  width: 100%;
+  padding: 9px 14px 9px 38px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  color: var(--text-primary);
+  background: var(--white);
+  outline: none;
+  transition: border-color var(--transition-fast),
+              box-shadow var(--transition-fast);
+}
+
+.table-search__input:focus {
+  border-color: var(--success);
+  box-shadow: 0 0 0 3px rgba(29, 158, 117, .12);
+}
+
+.filter-select {
+  padding: 9px 32px 9px 12px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  color: var(--text-primary);
+  background: var(--white) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236E6E73' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 10px center;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  cursor: pointer;
+  outline: none;
+  transition: border-color var(--transition-fast);
+}
+
+.filter-select option {
+  background: var(--white);
+  color: var(--text-primary);
+}
+
+.filter-select:focus {
+  border-color: var(--success);
+  box-shadow: 0 0 0 3px rgba(29, 158, 117, .12);
+}
+
+.table-result-count {
+  font-size: 13px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  margin-left: auto;
+}
+
+/* Section wrapper + header bar (dashboard) */
+.dashboard-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.section-header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.section-header-bar__title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.section-header-bar__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--success);
+  transition: gap var(--transition-fast), color var(--transition-fast);
+}
+
+.section-header-bar__link:hover {
+  color: var(--success);
+  gap: 7px;
+  opacity: .8;
+}
+
+/* Utility: warna jumlah uang di tabel transaksi */
+.amount--income {
+  color: var(--success, #16a34a);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.amount--expense {
+  color: var(--danger, #dc2626);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Utility: teks abu-abu sekunder */
+.text-muted {
+  color: var(--text-tertiary, #9ca3af);
+}
+
+/* Utility: warna teks langsung (fallback jika dipakai di tempat lain) */
+.text-green { color: var(--success, #16a34a); font-weight: 600; }
+.text-red   { color: var(--danger,  #dc2626); font-weight: 600; }
+
+
+/* ============================================================
+   09. EVENT PAGES — view-only untuk staff
+============================================================ */
+
+/*
+  Staff tidak bisa mengedit event — hanya melihat.
+  Tampilkan banner "read-only" di atas halaman detail event.
+*/
+.readonly-notice {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  background: var(--warning-light);
+  border: 1px solid rgba(239, 159, 39, .25);
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  color: #92400E;
+  font-weight: 500;
+}
+
+.readonly-notice__icon {
+  flex-shrink: 0;
+  display: flex;
+  color: var(--warning);
+}
+
+/* Header detail event (view-only) */
+.event-detail-header {
+  background: var(--white);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-xs);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.event-detail-header__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.event-detail-header__title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.event-detail-header__label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  color: var(--text-tertiary);
+  margin-bottom: var(--space-1);
+}
+
+.event-detail-header__meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.event-detail-header__meta-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.event-detail-header__meta-icon {
+  flex-shrink: 0;
+  display: flex;
+  color: var(--text-tertiary);
+}
+
+/* Grid info event: 2 kolom kiri, anggaran kanan */
+.event-detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: var(--space-5);
+  align-items: flex-start;
+}
+
+.event-detail-grid__main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.event-detail-grid__aside {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  position: sticky;
+  top: var(--space-6);
+}
+
+/* Info field dalam event detail */
+.event-info-card {
+  background: var(--white);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  box-shadow: var(--shadow-xs);
+}
+
+.event-info-card__title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-4);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.event-info-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.event-info-list__item {
+  display: grid;
+  grid-template-columns: 130px 1fr;
+  gap: var(--space-2);
+  font-size: 14px;
+}
+
+.event-info-list__label {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.event-info-list__value {
+  color: var(--text-primary);
+}
+
+/* Badge peran staff dalam event */
+.role-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 4px 12px;
+  background: var(--success-light);
+  color: #065F46;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+/* Daftar event yang ditugaskan (index page staff) */
+.event-staff-card {
+  background: var(--white);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  box-shadow: var(--shadow-xs);
+  transition: box-shadow var(--transition-base), transform var(--transition-base);
+}
+
+.event-staff-card:hover {
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-1px);
+}
+
+.event-staff-card--aktif      { border-left: 3px solid var(--success); }
+.event-staff-card--draft      { border-left: 3px solid var(--border); }
+.event-staff-card--selesai    { border-left: 3px solid var(--primary); }
+.event-staff-card--dibatalkan { border-left: 3px solid var(--danger); }
+
+.event-staff-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.event-staff-card__name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.3;
+}
+
+.event-staff-card__meta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.event-staff-card__meta-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.event-staff-card__meta-icon {
+  flex-shrink: 0;
+  display: flex;
+  color: var(--text-tertiary);
+}
+
+.event-staff-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border-light);
+  gap: var(--space-2);
+}
+
+.events-staff-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-4);
+}
+
+
+/* ============================================================
+   10. TRANSAKSI PAGES — input oleh staff
+============================================================ */
+
+/*
+  Summary box ringkas di atas tabel transaksi.
+  Staff hanya melihat transaksi yang mereka input sendiri.
+*/
+.trx-staff-summary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-3);
+  background: var(--white);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4) var(--space-5);
+  box-shadow: var(--shadow-xs);
+}
+
+.trx-staff-summary__item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: center;
+}
+
+.trx-staff-summary__item + .trx-staff-summary__item {
+  border-left: 1px solid var(--border-light);
+}
+
+.trx-staff-summary__label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--text-tertiary);
+}
+
+.trx-staff-summary__value {
+  font-size: 18px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+}
+
+.trx-staff-summary__value--green { color: var(--success); }
+.trx-staff-summary__value--red   { color: var(--danger);  }
+
+/* Form input transaksi oleh staff */
+.trx-form-card {
+  background: var(--white);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-xs);
+  max-width: 640px;
+}
+
+.trx-form-card__title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-5);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--border-light);
+}
+
+/* Tipe toggle: Pemasukan / Pengeluaran */
+.tipe-toggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+.tipe-toggle__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: var(--white);
+  cursor: pointer;
+  transition: border-color var(--transition-fast),
+              background var(--transition-fast),
+              color var(--transition-fast),
+              box-shadow var(--transition-fast);
+  user-select: none;
+}
+
+/* Sembunyikan radio asli — tampilan dikendalikan lewat class .active */
+.tipe-toggle__btn input[type="radio"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.tipe-toggle__btn:hover {
+  border-color: #AEAEB2;
+  background: var(--bg-light);
+}
+
+.tipe-toggle__btn--pemasukan.active,
+.tipe-toggle__btn--pemasukan:has(input:checked) {
+  background: rgba(29, 158, 117, .07);
+  border-color: var(--success);
+  color: var(--success);
+  box-shadow: 0 0 0 3px rgba(29, 158, 117, .12);
+}
+
+.tipe-toggle__btn--pengeluaran.active,
+.tipe-toggle__btn--pengeluaran:has(input:checked) {
+  background: rgba(226, 75, 74, .07);
+  border-color: var(--danger);
+  color: var(--danger);
+  box-shadow: 0 0 0 3px rgba(226, 75, 74, .12);
+}
+
+.tipe-toggle__btn svg {
+  flex-shrink: 0;
+  transition: color var(--transition-fast);
+}
+
+/* Upload bukti transaksi */
+.upload-area {
+  position: relative;           /* ← wajib: mengurung input[type=file] yang absolute */
+  overflow: hidden;              /* ← clip input agar tidak keluar batas */
+  border: 2px dashed var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-6);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  background: var(--bg-light);
+  transition: border-color var(--transition-fast), background var(--transition-fast);
+  cursor: pointer;
+}
+
+.upload-area:hover {
+  border-color: var(--success);
+  background: var(--success-light);
+}
+
+.upload-area__icon {
+  color: var(--text-tertiary);
+  margin-bottom: var(--space-1);
+}
+
+.upload-area__text {
+  font-size: 14px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.upload-area__hint {
+  font-size: 12px;
+  color: var(--text-tertiary);
+}
+
+/* Preview file yang sudah diupload */
+.upload-preview {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: var(--success-light);
+  border: 1px solid rgba(29, 158, 117, .25);
+  border-radius: var(--radius-md);
+}
+
+.upload-preview__icon {
+  color: var(--success);
+  flex-shrink: 0;
+  display: flex;
+}
+
+.upload-preview__name {
+  flex: 1;
+  font-size: 14px;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.upload-preview__remove {
+  color: var(--text-secondary);
+  flex-shrink: 0;
+  display: flex;
+  cursor: pointer;
+  transition: color var(--transition-fast);
+}
+
+.upload-preview__remove:hover {
+  color: var(--danger);
+}
+
+/* Form actions */
+.form-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding-top: var(--space-5);
+  margin-top: var(--space-4);
+  border-top: 1px solid var(--border-light);
+}
+
+
+/* ============================================================
+   11. PROFIL PAGE
+============================================================ */
+.profil-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: var(--space-6);
+  align-items: flex-start;
+}
+
+/* Kartu avatar + nama di kiri */
+.profil-card {
+  background: var(--white);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-xs);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  text-align: center;
+  position: sticky;
+  top: var(--space-6);
+}
+
+.profil-card__avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: var(--success);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--white);
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.profil-card__name {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.3;
+}
+
+.profil-card__role {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  background: var(--success-light);
+  color: #065F46;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.profil-card__meta {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  font-size: 13px;
+  color: var(--text-secondary);
+  border-top: 1px solid var(--border-light);
+  padding-top: var(--space-4);
+}
+
+.profil-card__meta-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.profil-card__meta-item svg {
+  flex-shrink: 0;
+  color: var(--text-tertiary);
+}
+
+/* Form profil di kanan */
+.profil-form-card {
+  background: var(--white);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-xs);
+}
+
+.profil-form-card__title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-5);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--border-light);
+}
+
+/* Field yang tidak bisa diedit — readonly */
+.form-input--readonly {
+  background: var(--bg-light);
+  color: var(--text-secondary);
+  cursor: not-allowed;
+}
+
+.form-input--readonly:focus {
+  border-color: var(--border);
+  box-shadow: none;
+}
+
+.form-readonly-note {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin-top: 4px;
+}
+
+
+/* ============================================================
+   12. GANTI PASSWORD PAGE
+============================================================ */
+
+/*
+  Layout kartu di tengah — mirip halaman auth (login/register)
+  tapi tanpa panel branding kiri.
+  Diakses wajib saat first_login=1, atau mandiri via profil.
+*/
+.ganti-password-body {
+  /* Sama seperti auth-body di style.css */
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-6);
+  background: var(--bg-light);
+}
+
+.ganti-password-card {
+  background: var(--white);
+  border-radius: var(--radius-xl);
+  padding: var(--space-10) var(--space-8);
+  width: 100%;
+  max-width: 480px;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border-light);
+}
+
+.ganti-password-card__icon {
+  width: 56px;
+  height: 56px;
+  background: var(--success-light);
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--success);
+  margin-bottom: var(--space-5);
+}
+
+.ganti-password-card__title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--space-1);
+}
+
+.ganti-password-card__subtitle {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-6);
+  line-height: 1.5;
+}
+
+/*
+  Banner khusus untuk first_login: menjelaskan mengapa
+  staff harus ganti password sebelum melanjutkan.
+*/
+.first-login-notice {
+  display: flex;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: var(--warning-light);
+  border: 1px solid rgba(239, 159, 39, .30);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-5);
+}
+
+.first-login-notice__icon {
+  flex-shrink: 0;
+  color: var(--warning);
+  display: flex;
+  margin-top: 1px;
+}
+
+.first-login-notice__body {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.first-login-notice__title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #92400E;
+}
+
+.first-login-notice__text {
+  font-size: 13px;
+  color: #92400E;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Indikator kekuatan password */
+.password-strength {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin-top: var(--space-1);
+}
+
+.password-strength__bar-row {
+  display: flex;
+  gap: 4px;
+}
+
+.password-strength__bar {
+  flex: 1;
+  height: 4px;
+  border-radius: var(--radius-full);
+  background: var(--border-light);
+  transition: background var(--transition-fast);
+}
+
+.password-strength__bar--filled-weak   { background: var(--danger); }
+.password-strength__bar--filled-fair   { background: var(--warning); }
+.password-strength__bar--filled-good   { background: var(--primary); }
+.password-strength__bar--filled-strong { background: var(--success); }
+
+.password-strength__label {
+  font-size: 12px;
+  color: var(--text-tertiary);
+}
+
+.password-strength__label--weak   { color: var(--danger); }
+.password-strength__label--fair   { color: var(--warning); }
+.password-strength__label--good   { color: var(--primary); }
+.password-strength__label--strong { color: var(--success); }
+
+/*
+  Halaman ganti password saat diakses dalam layout admin
+  (bukan first_login) — kartu ditampilkan dalam admin-content.
+*/
+.ganti-password-layout {
+  display: flex;
+  justify-content: center;
+  padding-top: var(--space-4);
+}
+
+.ganti-password-layout .ganti-password-card {
+  box-shadow: var(--shadow-sm);
+}
+
+
+/* ============================================================
+   13. RESPONSIVE ≤ 768px
+============================================================ */
+@media (max-width: 768px) {
+
+  /* Stats: 2 kolom di tablet */
+  .stats-grid {
+    --stats-cols: 2;
+  }
+
+  /* Konten: tidak di-push sidebar */
+  .admin-content {
+    margin-left: 0;
+    max-width: 100%;
+    padding: var(--space-4);
+  }
+
+  /* Chart full width */
+  .chart-card--full {
+    width: 100%;
+  }
+
+  /* Events grid: 1 kolom */
+  .events-staff-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Event detail grid: stack */
+  .event-detail-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .event-detail-grid__aside {
+    position: static;
+  }
+
+  /* Trx summary: 1 kolom */
+  .trx-staff-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .trx-staff-summary__item + .trx-staff-summary__item {
+    border-left: none;
+    border-top: 1px solid var(--border-light);
+    padding-top: var(--space-3);
+  }
+
+  /* Profil layout: stack */
+  .profil-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .profil-card {
+    position: static;
+  }
+
+  /* Ganti password: full width */
+  .ganti-password-card {
+    padding: var(--space-6) var(--space-5);
+    box-shadow: var(--shadow-sm);
+  }
+
+  /* Page header: stack */
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  /* Greeting */
+  .page-greeting {
+    font-size: 15px;
+  }
+
+  .page-title {
+    font-size: 22px;
+  }
+
+  /* Table filter */
+  .table-filter-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .table-search {
+    max-width: 100%;
+  }
+
+  .table-result-count {
+    margin-left: 0;
+  }
+
+  /* Tipe toggle: stack */
+  .tipe-toggle {
+    grid-template-columns: 1fr;
+  }
+
+  /* Event info list: tidak grid */
+  .event-info-list__item {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+
+  .event-info-list__label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    color: var(--text-tertiary);
+  }
+}
+
+@media (max-width: 480px) {
+  /* Stats: 1 kolom di ponsel kecil */
+  .stats-grid {
+    --stats-cols: 1;
+  }
+
+  .stat-card__value {
+    font-size: 22px;
+  }
+
+  .admin-content {
+    padding: var(--space-3);
+    gap: var(--space-4);
+  }
+
+  .ganti-password-card {
+    padding: var(--space-5) var(--space-4);
+  }
+}
+
+/* ============================================================
+   FORM LAYOUT — form tambah transaksi staff
+   Selaras dengan admin.css agar tampilan konsisten.
+============================================================ */
+
+/* Layout dua kolom: form kiri, sidebar info kanan */
+.form-layout {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: var(--space-6);
+  align-items: flex-start;
+}
+
+/* Card wrapper untuk form */
+.form-card {
+  background: var(--white);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-xs);
+  min-width: 0;
+}
+
+.form-card__title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-5);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--border-light);
+}
+
+/* Sidebar panduan */
+.form-sidebar-card {
+  background: var(--white);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  box-shadow: var(--shadow-xs);
+  position: sticky;
+  top: var(--space-6);
+}
+
+.form-sidebar-card__title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-4);
+}
+
+.form-sidebar-tip {
+  display: flex;
+  gap: var(--space-2);
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  padding: var(--space-3);
+  background: var(--primary-faint);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(0, 113, 227, .12);
+}
+
+.form-sidebar-tip + .form-sidebar-tip {
+  margin-top: var(--space-2);
+}
+
+.form-sidebar-tip__icon {
+  flex-shrink: 0;
+  margin-top: 1px;
+  display: flex;
+  align-items: flex-start;
+}
+
+/* Input row: dua field sejajar */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+}
+
+/* Form actions: tombol submit + batal */
+.form-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding-top: var(--space-5);
+  margin-top: var(--space-5);
+  border-top: 1px solid var(--border-light);
+}
+
+/* Responsive ≤ 768px */
+@media (max-width: 768px) {
+  .form-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .form-sidebar-card {
+    position: static;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+}

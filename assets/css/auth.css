@@ -1,0 +1,910 @@
+/* ============================================================
+   EO Finance — auth.css
+   Dipakai di: login.php, register.php, lupa-password.php,
+               verifikasi-otp.php, reset-password.php,
+               staff/ganti-password.php
+   Design language: Apple-inspired — bersih, whitespace, rounded.
+   Semua warna via var() dari style.css. Tanpa framework.
+
+   Struktur file:
+   01. Auth Body & Wrapper
+   02. Auth Layout (split: brand panel + form panel)
+   03. Auth Brand Panel (panel kiri bergambar)
+   04. Auth Main Panel (panel kanan, wadah card)
+   05. Auth Card
+   06. Auth Card — Header (judul & subjudul)
+   07. Auth Card — Icon Dekoratif
+   08. Auth Card — Footer Text & Link
+   09. Auth Card — Resend Area
+   10. Form Group & Label
+   11. Form Input (text, email, password, tel)
+   12. Form Input — States (focus, error)
+   13. Form Input — OTP variant
+   14. Form Textarea
+   15. Form Select
+   16. Form Hint & Error Message
+   17. Form Fieldset
+   18. Form Label Row (label + inline link)
+   19. Form Note
+   20. Tombol Submit
+   21. Auth Link
+   22. Auth Steps Indicator
+   23. Alert / Flash Messages
+   24. Password Strength Indicator
+   25. Ganti Password Layout (staff halaman dalam sistem)
+   26. First Login Notice
+   27. Divider Horizontal
+   28. Responsive — max-width 768px
+   29. Responsive — max-width 480px
+============================================================ */
+
+
+/* ============================================================
+   01. AUTH BODY & WRAPPER
+   Body auth full-height flexbox, background bg-light.
+============================================================ */
+body.auth-body {
+  min-height: 100vh;
+  background-color: var(--bg-light);
+  display: flex;
+  align-items: stretch;
+}
+
+
+/* ============================================================
+   02. AUTH LAYOUT
+   Split dua kolom: panel branding (kiri) + panel form (kanan).
+   Layout --wide dipakai di register.php yang kontennya lebih banyak.
+============================================================ */
+.auth-layout {
+  display: grid;
+  grid-template-columns: 440px 1fr;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.auth-layout--wide {
+  grid-template-columns: 440px 1fr;
+}
+
+
+/* ============================================================
+   03. AUTH BRAND PANEL
+   Panel kiri dengan background primary, konten statis dekoratif.
+   Di mobile tersembunyi (lihat responsive).
+============================================================ */
+.auth-brand {
+  background: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-10) var(--space-8);
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+
+.auth-brand__inner {
+  width: 100%;
+  max-width: 340px;
+}
+
+/* Logo + nama aplikasi dalam panel brand */
+.auth-brand__logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-10);
+}
+
+.auth-brand__name {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--white);
+  letter-spacing: -0.3px;
+}
+
+/* Kutipan tagline */
+.auth-brand__tagline {
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--white);
+  line-height: 1.35;
+  letter-spacing: -0.4px;
+  margin-bottom: var(--space-10);
+  border: none;
+  padding: 0;
+  opacity: 0.95;
+}
+
+/* Daftar fitur */
+.auth-brand__features {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.auth-brand__feature-item {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.82);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  line-height: 1.4;
+}
+
+/* Bullet check mark sebelum setiap item */
+.auth-brand__feature-item::before {
+  content: '';
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 50%;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M5 13l4 4L19 7' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+
+/* ============================================================
+   04. AUTH MAIN PANEL
+   Panel kanan: scroll-capable, flex center, wraps auth-card.
+============================================================ */
+.auth-main {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: var(--space-12) var(--space-6);
+  overflow-y: auto;
+  min-height: 100vh;
+}
+
+
+/* ============================================================
+   05. AUTH CARD
+   Kartu putih mengambang di tengah panel kanan.
+   Lebar maksimal 440px, full-width di mobile.
+============================================================ */
+.auth-card {
+  background: var(--white);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-md);
+  padding: var(--space-10);
+  width: 100%;
+  max-width: 440px;
+  margin-top: var(--space-6);
+}
+
+/* Varian scroll — untuk halaman register yang panjang */
+.auth-card--scroll {
+  max-height: none;
+}
+
+
+/* ============================================================
+   06. AUTH CARD — HEADER
+   Judul dan subjudul di atas form.
+============================================================ */
+.auth-card__header {
+  margin-bottom: var(--space-6);
+}
+
+.auth-card__title {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.3px;
+  margin-bottom: var(--space-1);
+  line-height: 1.3;
+}
+
+.auth-card__subtitle {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  margin: 0;
+}
+
+.auth-card__subtitle strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+
+/* ============================================================
+   07. AUTH CARD — ICON DEKORATIF
+   Ikon SVG di atas header (lupa-password, OTP, reset-password).
+============================================================ */
+.auth-card__icon {
+  width: 56px;
+  height: 56px;
+  background: var(--primary-light);
+  color: var(--primary);
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--space-5);
+}
+
+
+/* ============================================================
+   08. AUTH CARD — FOOTER TEXT & LINK NAVIGASI
+   Teks di bawah form: "Sudah punya akun? Masuk di sini"
+============================================================ */
+.auth-card__footer-text {
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-top: var(--space-5);
+  margin-bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  flex-wrap: wrap;
+}
+
+
+/* ============================================================
+   09. AUTH CARD — RESEND AREA
+   Wrapper link "kirim ulang OTP" di verifikasi-otp.php.
+============================================================ */
+.auth-card__resend {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  margin-top: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.auth-card__resend .auth-card__footer-text {
+  margin-top: 0;
+}
+
+.auth-card__resend .btn--text {
+  font-size: 13px;
+  padding: 0;
+  height: auto;
+  font-weight: 500;
+}
+
+
+/* ============================================================
+   10. FORM GROUP & LABEL
+   Wrapper setiap pasangan label + input.
+============================================================ */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.form-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+/* Tanda * wajib isi di samping label */
+.form-label__required {
+  color: var(--danger);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+
+/* ============================================================
+   11. FORM INPUT (text, email, password, tel)
+   Input standar digunakan di seluruh halaman auth.
+   font-size 16px minimum untuk mencegah iOS zoom.
+============================================================ */
+.form-input {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: 15px;
+  color: var(--text-primary);
+  background: var(--white);
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  line-height: 1.5;
+}
+
+.form-input::placeholder {
+  color: var(--text-tertiary);
+}
+
+
+/* ============================================================
+   12. FORM INPUT — STATES
+   Focus, error, dan disabled.
+============================================================ */
+
+/* Focus */
+.form-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.12);
+}
+
+/* Error — ditambah JS validasi atau PHP re-render */
+.form-input.is-error,
+.form-input[aria-invalid="true"] {
+  border-color: var(--danger);
+  box-shadow: 0 0 0 3px rgba(226, 75, 74, 0.12);
+}
+
+.form-input:disabled {
+  background: var(--bg-light);
+  color: var(--text-tertiary);
+  cursor: not-allowed;
+  border-color: var(--border-light);
+}
+
+
+/* ============================================================
+   13. FORM INPUT — OTP VARIANT
+   Input kode OTP satu field di verifikasi-otp.php.
+   Font besar, monospace feel, letter-spacing lebar.
+============================================================ */
+.form-input--otp {
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: 12px;
+  text-align: center;
+  border-width: 2px;
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  font-variant-numeric: tabular-nums;
+}
+
+.form-input--otp:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.15);
+}
+
+.form-input--otp.is-error {
+  border-color: var(--danger);
+  box-shadow: 0 0 0 4px rgba(226, 75, 74, 0.12);
+}
+
+
+/* ============================================================
+   14. FORM TEXTAREA
+   Untuk field alamat di register.php.
+============================================================ */
+.form-input--textarea,
+textarea.form-input {
+  resize: vertical;
+  min-height: 80px;
+  line-height: 1.55;
+}
+
+
+/* ============================================================
+   15. FORM SELECT
+   Dropdown dengan custom arrow — appearance: none.
+============================================================ */
+select.form-input {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M6 9l6 6 6-6' stroke='%236E6E73' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 40px;
+  cursor: pointer;
+}
+
+select.form-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.12);
+}
+
+
+/* ============================================================
+   16. FORM HINT & ERROR MESSAGE INLINE
+   Teks kecil di bawah input — petunjuk atau pesan error.
+============================================================ */
+
+/* Petunjuk non-error (selalu tampil) */
+.form-hint {
+  display: block;
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  margin-top: 2px;
+}
+
+/* Pesan error inline (ditampilkan JS atau PHP) */
+.error-message {
+  display: block;
+  font-size: 12px;
+  color: var(--danger);
+  line-height: 1.4;
+  margin-top: 2px;
+}
+
+
+/* ============================================================
+   17. FORM FIELDSET
+   Pengelompokan field di register.php (Data Akun / Data EO).
+============================================================ */
+.form-fieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.form-fieldset__legend {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-4);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--border-light);
+  width: 100%;
+  display: block;
+}
+
+
+/* ============================================================
+   18. FORM LABEL ROW
+   Baris label + link inline "Lupa password?" di login.php.
+============================================================ */
+.form-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.form-label-link {
+  font-size: 12px;
+  color: var(--primary);
+  font-weight: 500;
+  text-decoration: none;
+  flex-shrink: 0;
+  transition: color var(--transition-fast);
+}
+
+.form-label-link:hover {
+  color: var(--primary-dark);
+  text-decoration: underline;
+}
+
+
+/* ============================================================
+   19. FORM NOTE
+   Catatan kecil di bawah tombol submit: "* Wajib diisi"
+============================================================ */
+.form-note {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  text-align: center;
+  margin: 0;
+}
+
+
+/* ============================================================
+   20. TOMBOL SUBMIT AUTH
+   Tombol submit penuh lebar, pakai class .btn .btn--primary .btn--full
+   yang sudah didefinisikan di style.css.
+   Di sini hanya override khusus konteks auth jika diperlukan.
+============================================================ */
+
+/* Margin atas sebelum tombol submit */
+.auth-form .btn--full {
+  margin-top: var(--space-2);
+}
+
+/* State loading (atribut disabled + JS class) */
+.btn--primary:disabled,
+.btn--primary[aria-disabled="true"] {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+
+/* ============================================================
+   21. AUTH LINK
+   Link navigasi di bawah card: "Daftar sekarang", "Masuk di sini"
+   dan link back dengan ikon panah.
+============================================================ */
+.auth-link {
+  color: var(--primary);
+  font-weight: 500;
+  font-size: 13px;
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.auth-link:hover {
+  color: var(--primary-dark);
+  text-decoration: underline;
+}
+
+/* Link back dengan ikon panah */
+.auth-link--back {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--text-secondary);
+  font-weight: 400;
+  font-size: 13px;
+  transition: color var(--transition-fast);
+}
+
+.auth-link--back:hover {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.auth-link--back svg {
+  flex-shrink: 0;
+  transition: transform var(--transition-fast);
+}
+
+.auth-link--back:hover svg {
+  transform: translateX(-2px);
+}
+
+/* Pemisah horizontal antara form dan link bawah */
+.auth-divider {
+  border: none;
+  border-top: 1px solid var(--border-light);
+  margin: var(--space-5) 0;
+}
+
+
+/* ============================================================
+   22. AUTH STEPS INDICATOR
+   Indikator langkah 1 › 2 › 3 di alur reset password.
+   Dipakai di lupa-password.php, verifikasi-otp.php,
+   reset-password.php.
+============================================================ */
+.auth-steps {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  margin-top: var(--space-6);
+  margin-bottom: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.auth-steps__item {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  white-space: nowrap;
+  transition: color var(--transition-fast);
+}
+
+/* Langkah aktif */
+.auth-steps__item--active {
+  color: var(--primary);
+  font-weight: 600;
+}
+
+/* Separator › antar langkah */
+.auth-steps__divider {
+  color: var(--border);
+  font-size: 14px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+
+/* ============================================================
+   23. ALERT / FLASH MESSAGES
+   Pesan dari session yang dirender via includes/alert.php.
+   Tiga varian: error, success, info (warning juga disupport).
+   Pakai class .alert .alert--{type} dari style.css,
+   di sini hanya tambahan margin bawah konteks auth.
+============================================================ */
+.auth-card .alert {
+  margin-bottom: var(--space-4);
+}
+
+/* Fallback class alternatif jika ada yang pakai class lama.
+   Catatan: warna teks (color) di bawah sengaja tidak menggunakan
+   var() karena style.css tidak mendefinisikan varian gelap dari
+   warna semantik (--danger-dark, --success-dark, dll).
+   Nilai hex ini dipilih agar memenuhi kontras WCAG AA 4.5:1
+   di atas background masing-masing. */
+.flash-error {
+  background: var(--danger-light);
+  border-left: 3px solid var(--danger);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  font-size: 13px;
+  color: #991B1B;   /* kontras 7.1:1 di atas #FEF2F2 */
+  margin-bottom: var(--space-5);
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+}
+
+.flash-success {
+  background: var(--success-light);
+  border-left: 3px solid var(--success);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  font-size: 13px;
+  color: #065F46;   /* kontras 7.5:1 di atas #EAFAF4 */
+  margin-bottom: var(--space-5);
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+}
+
+.flash-info {
+  background: var(--primary-light);
+  border-left: 3px solid var(--primary);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  font-size: 13px;
+  color: #1E40AF;   /* kontras 5.1:1 di atas #EBF4FF */
+  margin-bottom: var(--space-5);
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+}
+
+
+/* ============================================================
+   24. PASSWORD STRENGTH INDICATOR
+   Tiga bar kekuatan password di register.php dan reset-password.php.
+   Dimunculkan dan dikontrol via assets/js/validation.js.
+============================================================ */
+.password-strength {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-1);
+}
+
+/* Satu bar kekuatan (ada 3 bar total) */
+.strength-bar {
+  height: 4px;
+  border-radius: 2px;
+  flex: 1;
+  background: var(--border);
+  transition: background var(--transition-base);
+}
+
+/* Level lemah: hanya bar pertama berwarna */
+.password-strength.weak .strength-bar:nth-child(1) {
+  background: var(--danger);
+}
+
+/* Level sedang: dua bar pertama berwarna */
+.password-strength.medium .strength-bar:nth-child(1),
+.password-strength.medium .strength-bar:nth-child(2) {
+  background: var(--warning);
+}
+
+/* Level kuat: tiga bar berwarna */
+.password-strength.strong .strength-bar:nth-child(1),
+.password-strength.strong .strength-bar:nth-child(2),
+.password-strength.strong .strength-bar:nth-child(3) {
+  background: var(--success);
+}
+
+/* Teks keterangan level ("Lemah", "Sedang", "Kuat") */
+.strength-text {
+  font-size: 12px;
+  white-space: nowrap;
+  font-weight: 500;
+  min-width: 40px;
+  text-align: right;
+}
+
+.password-strength.weak   .strength-text { color: var(--danger);  }
+.password-strength.medium .strength-text { color: var(--warning); }
+.password-strength.strong .strength-text { color: var(--success); }
+
+
+/* ============================================================
+   25. GANTI PASSWORD LAYOUT
+   Halaman staff/ganti-password.php berada di dalam sistem
+   (ada navbar/sidebar), bukan halaman auth biasa.
+   Kartu diposisikan dengan max-width agar tidak terlalu lebar.
+============================================================ */
+.ganti-password-layout {
+  display: flex;
+  justify-content: center;
+  padding-top: var(--space-6);
+}
+
+.ganti-password-card {
+  background: var(--white);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+  padding: var(--space-8);
+  width: 100%;
+  max-width: 480px;
+}
+
+.ganti-password-card__icon {
+  width: 52px;
+  height: 52px;
+  background: var(--primary-light);
+  color: var(--primary);
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--space-4);
+}
+
+.ganti-password-card__title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-2);
+}
+
+.ganti-password-card__subtitle {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  margin-bottom: var(--space-5);
+}
+
+
+/* ============================================================
+   26. FIRST LOGIN NOTICE
+   Banner peringatan kuning di ganti-password.php
+   untuk staff yang baru pertama kali login.
+============================================================ */
+.first-login-notice {
+  display: flex;
+  gap: var(--space-3);
+  background: var(--warning-light);
+  border: 1px solid rgba(239, 159, 39, 0.3);
+  border-left: 3px solid var(--warning);
+  border-radius: var(--radius-md);
+  padding: 14px var(--space-4);
+  margin-bottom: var(--space-5);
+}
+
+.first-login-notice__icon {
+  flex-shrink: 0;
+  color: var(--warning);
+  display: flex;
+  align-items: flex-start;
+  margin-top: 1px;
+}
+
+.first-login-notice__body {
+  flex: 1;
+}
+
+.first-login-notice__title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #92400E;   /* amber-800: kontras 6.4:1 di atas warning-light */
+  margin-bottom: var(--space-1);
+}
+
+.first-login-notice__text {
+  font-size: 13px;
+  color: #78350F;   /* amber-900: kontras 8.2:1 di atas warning-light */
+  line-height: 1.5;
+  margin: 0;
+}
+
+
+/* ============================================================
+   27. DIVIDER HORIZONTAL
+   Garis pemisah antara form dan link navigasi bawah.
+============================================================ */
+hr.auth-divider {
+  border: none;
+  border-top: 1px solid var(--border-light);
+  margin: var(--space-5) 0;
+}
+
+
+/* ============================================================
+   28. RESPONSIVE — max-width: 768px
+   Di tablet dan mobile: panel brand disembunyikan,
+   panel form jadi full width.
+============================================================ */
+@media (max-width: 768px) {
+  /* Layout jadi satu kolom */
+  .auth-layout,
+  .auth-layout--wide {
+    grid-template-columns: 1fr;
+  }
+
+  /* Sembunyikan panel brand di mobile */
+  .auth-brand {
+    display: none;
+  }
+
+  /* Panel form menyesuaikan seluruh lebar */
+  .auth-main {
+    padding: var(--space-8) var(--space-5);
+    min-height: 100vh;
+    align-items: flex-start;
+    padding-top: var(--space-10);
+  }
+
+  /* Card sedikit lebih ramping di tablet */
+  .auth-card {
+    padding: var(--space-8);
+    margin-top: 0;
+  }
+}
+
+
+/* ============================================================
+   29. RESPONSIVE — max-width: 480px
+   Di HP: card full width, padding lebih kecil,
+   font ukuran disesuaikan.
+============================================================ */
+@media (max-width: 480px) {
+  .auth-main {
+    padding: var(--space-6) var(--space-4);
+    padding-top: var(--space-8);
+  }
+
+  /* Card penuh lebar layar minus margin kiri kanan */
+  .auth-card {
+    padding: var(--space-6);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    margin-inline: 0;
+  }
+
+  /* Judul card sedikit lebih kecil */
+  .auth-card__title {
+    font-size: 20px;
+  }
+
+  /* Input OTP lebih kecil agar muat layar sempit */
+  .form-input--otp {
+    font-size: 22px;
+    letter-spacing: 8px;
+    padding: var(--space-3) var(--space-4);
+  }
+
+  /* Ganti password card */
+  .ganti-password-card {
+    padding: var(--space-6);
+  }
+
+  /* Steps wrap lebih rapi */
+  .auth-steps {
+    gap: 4px;
+  }
+
+  .auth-steps__item {
+    font-size: 11px;
+  }
+}

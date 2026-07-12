@@ -1,0 +1,1997 @@
+/* ============================================================
+   EO Finance — Admin Stylesheet
+   Khusus untuk semua halaman dalam folder /admin.
+   Bergantung pada style.css yang harus di-load terlebih dahulu.
+
+   Struktur file:
+   01. Admin Layout — sidebar + konten
+   02. Sidebar Overrides (admin-specific)
+   03. Page Header & Greeting
+   04. Stats Grid — 4 kolom
+   05. Chart Areas
+   06. Progress Bar — admin variant
+   07. Data Tables — zebra stripe & hover
+   08. Event Pages
+   09. Transaksi Pages
+   10. Vendor & Klien Pages
+   11. Staff Management Pages
+   12. Laporan Pages — layout cetak
+   13. Form Pages (tambah/edit)
+   14. Detail Pages
+   15. Responsive ≤ 768px
+============================================================ */
+
+
+/* ============================================================
+   01. ADMIN LAYOUT — sidebar fixed + konten kanan
+============================================================ */
+
+/*
+  Sidebar sudah diposisikan fixed di style.css.
+  admin.css menambahkan border kanan yang membedakan
+  sidebar admin dari area konten.
+*/
+.role-admin_eo .sidebar {
+  border-right: 1px solid rgba(255, 255, 255, .06);
+}
+
+/*
+  .admin-layout adalah flex container.
+  .admin-content mengambil sisa lebar setelah sidebar.
+  margin-left = lebar sidebar agar konten tidak tertutup sidebar fixed.
+*/
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+  background: var(--bg-light);
+}
+
+.admin-content {
+  flex: 1;
+  min-width: 0;
+  margin-left: var(--sidebar-width);
+  padding: var(--space-8);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  max-width: calc(100vw - var(--sidebar-width));
+}
+
+
+/* ============================================================
+   02. SIDEBAR OVERRIDES — admin accent color
+============================================================ */
+
+/*
+  Saat menu aktif di halaman admin, garis indikator kiri
+  menggunakan warna biru primary — identik dengan style.css
+  tapi dideklarasikan di sini sebagai override yang jelas.
+*/
+.role-admin_eo .nav__item--active .nav__link {
+  background: rgba(0, 113, 227, .12);
+  color: #fff;
+}
+
+.role-admin_eo .nav__active-indicator {
+  background: var(--primary);
+  box-shadow: 0 0 8px rgba(0, 113, 227, .5);
+}
+
+
+/* ============================================================
+   03. PAGE HEADER & GREETING
+============================================================ */
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding-bottom: var(--space-2);
+}
+
+.page-header__left {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.page-header__right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+/*
+  Greeting: font lebih besar, weight 300 (light) agar terasa
+  hangat dan kontras dengan page-title yang bold di bawahnya.
+*/
+.page-greeting {
+  font-size: 18px;
+  font-weight: 300;
+  color: var(--text-secondary);
+  letter-spacing: -.01em;
+  line-height: 1.3;
+  margin: 0;
+}
+
+.page-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -.02em;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.page-subtitle {
+  font-size: 14px;
+  color: var(--text-tertiary);
+  margin: 0;
+}
+
+/* Breadcrumb sederhana */
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 13px;
+  color: var(--text-tertiary);
+  margin-bottom: var(--space-1);
+  flex-wrap: wrap;
+}
+
+.breadcrumb__item {
+  color: var(--text-tertiary);
+}
+
+.breadcrumb__item--active {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.breadcrumb__sep {
+  color: var(--text-tertiary);
+  font-size: 12px;
+}
+
+.breadcrumb__item:not(.breadcrumb__item--active):hover {
+  color: var(--primary);
+}
+
+
+/* ============================================================
+   04. STATS GRID — 4 kolom desktop
+============================================================ */
+
+/*
+  Menggunakan --stats-cols sebagai variabel lokal agar
+  responsive override hanya perlu mengubah satu nilai.
+*/
+.stats-grid {
+  --stats-cols: 4;
+  display: grid;
+  grid-template-columns: repeat(var(--stats-cols), 1fr);
+  gap: var(--space-4);
+}
+
+.stats-grid--3col {
+  --stats-cols: 3;
+}
+
+.stats-grid--2col {
+  --stats-cols: 2;
+}
+
+/* Kartu stat: hover mengangkat sedikit */
+.stat-card {
+  transition: box-shadow var(--transition-base), transform var(--transition-base);
+}
+
+.stat-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+/* Nilai besar: pastikan tidak wrap */
+.stat-card__value {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Sub-stat: dua angka pemasukan & pengeluaran di dalam satu kartu */
+.stat-card__sub-row {
+  display: flex;
+  gap: var(--space-4);
+  margin-top: var(--space-1);
+}
+
+.stat-card__sub-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.stat-card__sub-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color: var(--text-tertiary);
+}
+
+.stat-card__sub-value {
+  font-size: 13px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.stat-card__sub-value--green { color: var(--success); }
+.stat-card__sub-value--red   { color: var(--danger);  }
+
+/* Trend indicator (opsional, untuk iterasi berikutnya) */
+.stat-card__trend {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 2px 7px;
+  border-radius: var(--radius-full);
+}
+
+.stat-card__trend--up {
+  background: var(--success-light);
+  color: var(--success);
+}
+
+.stat-card__trend--down {
+  background: var(--danger-light);
+  color: var(--danger);
+}
+
+
+/* ============================================================
+   05. CHART AREAS — Canvas Chart.js
+============================================================ */
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-4);
+}
+
+.chart-card {
+  background: var(--white);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xs);
+  overflow: hidden;
+  transition: box-shadow var(--transition-base);
+}
+
+.chart-card:hover {
+  box-shadow: var(--shadow-sm);
+}
+
+.chart-card--full {
+  grid-column: 1 / -1;
+}
+
+.chart-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: var(--space-5) var(--space-6) var(--space-3);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.chart-card__title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.chart-card__subtitle {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  margin-top: 2px;
+  display: block;
+}
+
+/* Tombol filter periode di pojok kanan chart card */
+.chart-card__actions {
+  display: flex;
+  gap: var(--space-1);
+}
+
+.chart-filter-btn {
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: var(--bg-light);
+  border: 1px solid var(--border-light);
+  cursor: pointer;
+  transition: background var(--transition-fast),
+              color var(--transition-fast);
+}
+
+.chart-filter-btn--active,
+.chart-filter-btn:hover {
+  background: var(--primary);
+  color: var(--white);
+  border-color: var(--primary);
+}
+
+/*
+  Area canvas: tinggi 300px, background putih.
+  Chart.js merespect height parent — pastikan canvas
+  tidak punya inline height yang override ini.
+*/
+.chart-card__body {
+  padding: var(--space-5) var(--space-6) var(--space-6);
+  background: var(--white);
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.chart-card__body canvas {
+  width: 100% !important;
+  height: 100% !important;
+  max-height: 260px;
+}
+
+/* Placeholder saat canvas kosong (belum ada data/script) */
+.chart-card__body--empty {
+  flex-direction: column;
+  gap: var(--space-3);
+  color: var(--text-tertiary);
+}
+
+.chart-placeholder-icon {
+  opacity: .3;
+}
+
+.chart-placeholder-text {
+  font-size: 13px;
+  color: var(--text-tertiary);
+}
+
+/* Legend custom Chart.js */
+.chart-legend {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-5);
+  padding: 0 var(--space-6) var(--space-4);
+  flex-wrap: wrap;
+}
+
+.chart-legend__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.chart-legend__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+
+/* ============================================================
+   06. PROGRESS BAR — admin variant (lebih tebal dari global)
+============================================================ */
+
+/*
+  Versi admin lebih tebal (8px vs 5px di style.css) agar
+  lebih mudah dibaca di tabel laporan dan detail event.
+*/
+.progress-bar--lg {
+  height: 8px;
+  background: var(--border-light);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  margin-block: var(--space-2);
+}
+
+.progress-bar--lg .progress-bar__fill--hijau  { background: var(--success); }
+.progress-bar--lg .progress-bar__fill--kuning { background: var(--warning); }
+.progress-bar--lg .progress-bar__fill--merah  { background: var(--danger);  }
+
+/* Budget summary card — dipakai di detail event */
+.budget-summary {
+  background: var(--bg-light);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
+}
+
+.budget-summary__item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.budget-summary__label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--text-tertiary);
+}
+
+.budget-summary__value {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.budget-summary__value--green { color: var(--success); }
+.budget-summary__value--red   { color: var(--danger);  }
+
+/* Progress bar + label persentase dalam budget summary */
+.budget-summary__bar-wrap {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.budget-summary__bar-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+/* Layout vertikal anggaran untuk aside event detail */
+.budget-info-bar {
+  background: var(--bg-light);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4) var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.budget-info-bar__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+}
+
+.budget-info-bar__label {
+  color: var(--text-secondary);
+}
+
+.budget-info-bar__value {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.budget-info-bar__value--green { color: var(--success); }
+.budget-info-bar__value--red   { color: var(--danger);  }
+
+
+/* ============================================================
+   07. DATA TABLES — zebra stripe & hover biru muda
+============================================================ */
+
+/*
+  Override tabel global dari style.css dengan:
+  1. Zebra stripe: baris genap warna bg-light sangat tipis
+  2. Hover: biru sangat muda (#EBF4FF) alih-alih abu netral
+*/
+.admin-content .data-table thead {
+  background: #FAFAFA;
+  border-bottom: 2px solid var(--border-light);
+}
+
+.admin-content .data-table th {
+  padding: 12px 18px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  letter-spacing: .07em;
+}
+
+/* Zebra stripe: baris genap sedikit lebih gelap */
+.admin-content .data-table tbody tr:nth-child(even) {
+  background: #FAFAFA;
+}
+
+/* Hover biru sangat muda */
+.admin-content .data-table tbody tr:hover {
+  background: #EBF4FF;
+}
+
+.admin-content .data-table .data-table__cell {
+  padding: 14px 18px;
+}
+
+/* Kolom actions: jangan di-zebra-stripe */
+.admin-content .data-table tbody tr:nth-child(even) .data-table__cell--actions,
+.admin-content .data-table tbody tr:hover .data-table__cell--actions {
+  background: transparent;
+}
+
+/* Tabel sortable: header dengan ikon sort */
+.data-table th.sortable {
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+  padding-right: 28px;
+}
+
+.data-table th.sortable::after {
+  content: '↕';
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 11px;
+  color: var(--text-tertiary);
+  opacity: .5;
+}
+
+.data-table th.sortable.sort-asc::after  { content: '↑'; opacity: 1; color: var(--primary); }
+.data-table th.sortable.sort-desc::after { content: '↓'; opacity: 1; color: var(--primary); }
+
+/* Filter bar di atas tabel */
+.table-filter-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.table-search {
+  flex: 1;
+  min-width: 200px;
+  max-width: 360px;
+  position: relative;
+}
+
+.table-search__icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-tertiary);
+  pointer-events: none;
+  display: flex;
+}
+
+.table-search__input {
+  width: 100%;
+  padding: 9px 14px 9px 38px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  color: var(--text-primary);
+  background: var(--white);
+  outline: none;
+  transition: border-color var(--transition-fast),
+              box-shadow var(--transition-fast);
+}
+
+.table-search__input:focus {
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px rgba(0, 113, 227, .12);
+}
+
+/* Dropdown filter status/tipe */
+.filter-select {
+  padding: 9px 32px 9px 12px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  color: var(--text-primary);
+  background: var(--white) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236E6E73' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 10px center;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  cursor: pointer;
+  outline: none;
+  transition: border-color var(--transition-fast);
+}
+
+.filter-select option {
+  background: var(--white);
+  color: var(--text-primary);
+}
+
+.filter-select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(0, 113, 227, .12);
+}
+
+/* Jumlah hasil filter */
+.table-result-count {
+  font-size: 13px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  margin-left: auto;
+}
+
+
+/* ============================================================
+   08. EVENT PAGES
+============================================================ */
+
+/* Grid kartu event (view alternatif selain tabel) */
+.events-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
+}
+
+.event-card {
+  background: var(--white);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  box-shadow: var(--shadow-xs);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  transition: box-shadow var(--transition-base), transform var(--transition-base);
+}
+
+.event-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+/* Garis atas event-card berwarna sesuai status */
+.event-card--aktif      { border-top: 3px solid var(--success); }
+.event-card--draft      { border-top: 3px solid var(--border); }
+.event-card--selesai    { border-top: 3px solid var(--primary); }
+.event-card--dibatalkan { border-top: 3px solid var(--danger);  }
+
+.event-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.event-card__name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.3;
+}
+
+.event-card__meta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.event-card__meta-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.event-card__meta-icon {
+  flex-shrink: 0;
+  color: var(--text-tertiary);
+  display: flex;
+}
+
+.event-card__budget {
+  border-top: 1px solid var(--border-light);
+  padding-top: var(--space-3);
+}
+
+.event-card__budget-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--text-tertiary);
+  margin-bottom: var(--space-2);
+}
+
+.event-card__actions {
+  display: flex;
+  gap: var(--space-2);
+  margin-top: var(--space-1);
+}
+
+/* Detail event: tab navigasi */
+.event-tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 2px solid var(--border-light);
+  margin-bottom: var(--space-6);
+}
+
+.event-tab {
+  padding: var(--space-3) var(--space-5);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: color var(--transition-fast),
+              border-color var(--transition-fast);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.event-tab:hover {
+  color: var(--text-primary);
+}
+
+.event-tab--active {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+  font-weight: 600;
+}
+
+/* Info event dalam detail */
+.event-info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-4);
+}
+
+.event-info-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.event-info-item__label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--text-tertiary);
+}
+
+.event-info-item__value {
+  font-size: 15px;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+
+/* ============================================================
+   09. TRANSAKSI PAGES
+============================================================ */
+
+/* Summary box di atas tabel transaksi */
+.trx-summary {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: var(--space-3);
+  background: var(--white);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  box-shadow: var(--shadow-xs);
+}
+
+.trx-summary__item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: center;
+}
+
+.trx-summary__item + .trx-summary__item {
+  border-left: 1px solid var(--border-light);
+}
+
+.trx-summary__label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--text-tertiary);
+}
+
+.trx-summary__value {
+  font-size: 20px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+}
+
+.trx-summary__value--green { color: var(--success); }
+.trx-summary__value--red   { color: var(--danger);  }
+
+/* Bukti file transaksi */
+.trx-bukti {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: 13px;
+  color: var(--primary);
+  padding: 3px 10px;
+  background: var(--primary-light);
+  border-radius: var(--radius-sm);
+  transition: background var(--transition-fast);
+}
+
+.trx-bukti:hover {
+  background: var(--primary-faint);
+}
+
+.trx-bukti--none {
+  font-size: 13px;
+  color: var(--text-tertiary);
+}
+
+
+/* ============================================================
+   10. VENDOR & KLIEN PAGES
+============================================================ */
+
+/* Kartu kontak vendor/klien */
+.contact-card {
+  background: var(--white);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  display: flex;
+  gap: var(--space-4);
+  align-items: flex-start;
+  box-shadow: var(--shadow-xs);
+  transition: box-shadow var(--transition-base);
+}
+
+.contact-card:hover {
+  box-shadow: var(--shadow-sm);
+}
+
+.contact-card__avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  background: var(--primary-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--primary);
+  flex-shrink: 0;
+  text-transform: uppercase;
+}
+
+.contact-card__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.contact-card__name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+
+.contact-card__tag {
+  display: inline-block;
+  padding: 2px 8px;
+  background: var(--primary-light);
+  color: var(--primary);
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 600;
+  margin-bottom: var(--space-2);
+  text-transform: capitalize;
+}
+
+.contact-card__detail {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.contact-card__detail-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.contact-card__detail-icon {
+  flex-shrink: 0;
+  color: var(--text-tertiary);
+  display: flex;
+}
+
+.contact-card__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  flex-shrink: 0;
+}
+
+/* Grid untuk vendor/klien */
+.contacts-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-4);
+}
+
+
+/* ============================================================
+   11. STAFF MANAGEMENT PAGES
+============================================================ */
+
+/* Kartu staff dengan avatar dan role */
+.staff-card {
+  background: var(--white);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  box-shadow: var(--shadow-xs);
+  transition: box-shadow var(--transition-base);
+}
+
+.staff-card:hover {
+  box-shadow: var(--shadow-sm);
+}
+
+.staff-card__avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--white);
+  flex-shrink: 0;
+  text-transform: uppercase;
+}
+
+.staff-card__avatar--inactive {
+  background: var(--border);
+  color: var(--text-secondary);
+}
+
+.staff-card__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.staff-card__name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+
+.staff-card__email {
+  font-size: 13px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.staff-card__meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-1);
+}
+
+.staff-card__actions {
+  display: flex;
+  gap: var(--space-1);
+  flex-shrink: 0;
+}
+
+/* Badge status aktif/nonaktif staff */
+.badge--aktif-user {
+  background: var(--success-light);
+  color: #065F46;
+}
+
+.badge--nonaktif {
+  background: var(--bg-light);
+  color: var(--text-tertiary);
+  border: 1px solid var(--border);
+}
+
+.badge--first-login {
+  background: var(--warning-light);
+  color: #92400E;
+}
+
+/* List penugasan staff ke event */
+.penugasan-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.penugasan-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) var(--space-4);
+  background: var(--bg-light);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-light);
+}
+
+.penugasan-item__event {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.penugasan-item__role {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+.penugasan-item__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+
+/* ============================================================
+   12. LAPORAN PAGES — layout rapi + print-ready
+============================================================ */
+.laporan-header {
+  background: var(--white);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-xs);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.laporan-header__meta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.laporan-header__eo {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.laporan-header__period {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.laporan-header__actions {
+  display: flex;
+  gap: var(--space-2);
+}
+
+/* Filter laporan */
+.laporan-filter {
+  background: var(--white);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr) auto;
+  gap: var(--space-3);
+  align-items: end;
+  box-shadow: var(--shadow-xs);
+}
+
+.laporan-filter__group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.laporan-filter__label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}
+
+/* Modifier: filter dengan 3 field (mis. Audit Log) — kolom grid menyesuaikan
+   jumlah field sebenarnya supaya tidak ada kolom kosong seperti pada versi
+   4-field (Laporan). */
+.laporan-filter--3col {
+  grid-template-columns: repeat(3, 1fr) auto;
+}
+
+/* Grup aksi (tombol Filter/Reset) di dalam laporan-filter.
+   Strukturnya tetap kolom (label placeholder tak-terlihat + baris tombol)
+   supaya tinggi & posisi vertikalnya sejajar persis dengan kolom
+   label+dropdown lain — bukan cuma rata bawah.
+   height:fit-content memaksa tinggi mengikuti konten (bukan ikut melar
+   mengisi seluruh baris grid — inilah penyebab tombol tampak kelewat
+   tinggi/tidak sejajar sebelumnya). */
+.laporan-filter__group--action {
+  align-self: end;
+}
+
+.laporan-filter__buttons {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* .btn pakai line-height:1, sedangkan .filter-select mewarisi line-height
+   body (1.6) — akibatnya tinggi tombol lebih pendek ~8px dari dropdown di
+   sampingnya. Padahal keduanya sama-sama padding vertikal 9px & border
+   1.5px, jadi cukup samakan line-height supaya tinggi keduanya persis sama
+   dan tombol sejajar rapi (atas & bawah) dengan kolom dropdown lain. */
+.laporan-filter__buttons .btn {
+  line-height: 1.6;
+}
+
+/* Ringkasan laporan: grid 3 kolom */
+.laporan-summary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
+}
+
+.laporan-summary-card {
+  background: var(--white);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  text-align: center;
+  box-shadow: var(--shadow-xs);
+}
+
+.laporan-summary-card__label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-2);
+}
+
+.laporan-summary-card__value {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.laporan-summary-card__value--green { color: var(--success); }
+.laporan-summary-card__value--red   { color: var(--danger);  }
+
+/* ── Print styles ──────────────────────────────────────────── */
+@media print {
+  /* Sembunyikan elemen yang tidak relevan saat cetak */
+  .sidebar,
+  .page-header__right,
+  .laporan-header__actions,
+  .laporan-filter,
+  .btn,
+  .btn-icon,
+  .table-filter-bar,
+  .pagination,
+  .chart-card {
+    display: none !important;
+  }
+
+  /* Konten full width tanpa margin sidebar */
+  .admin-content {
+    margin-left: 0 !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+  }
+
+  .admin-layout {
+    display: block;
+  }
+
+  /* Tabel: selalu mulai dari halaman baru jika muat */
+  .data-table {
+    page-break-inside: auto;
+  }
+
+  .data-table tr {
+    page-break-inside: avoid;
+  }
+
+  /* Hapus shadow di print */
+  .table-wrap,
+  .stat-card,
+  .laporan-summary-card,
+  .laporan-header {
+    box-shadow: none;
+    border: 1px solid #DDD;
+  }
+
+  /* Font lebih kecil agar muat di kertas */
+  body {
+    font-size: 12px;
+  }
+
+  .data-table th,
+  .data-table .data-table__cell {
+    padding: 8px 10px;
+    font-size: 11px;
+  }
+
+  /* Warna latar diterapkan ke print */
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+
+
+/* ============================================================
+   13. FORM PAGES — tambah & edit
+============================================================ */
+
+/* Layout dua kolom: form kiri, sidebar info kanan */
+.form-layout {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: var(--space-6);
+  align-items: flex-start;
+}
+
+.form-layout--full {
+  grid-template-columns: 1fr;
+}
+
+/* Card wrapper untuk form */
+.form-card {
+  background: var(--white);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-xs);
+  min-width: 0;
+}
+
+.form-card__title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-5);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--border-light);
+}
+
+/* Sidebar info saat membuat event */
+.form-sidebar-card {
+  background: var(--white);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  box-shadow: var(--shadow-xs);
+  position: sticky;
+  top: var(--space-6);
+}
+
+.form-sidebar-card__title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-4);
+}
+
+.form-sidebar-tip {
+  display: flex;
+  gap: var(--space-2);
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  padding: var(--space-3);
+  background: var(--primary-faint);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(0, 113, 227, .12);
+}
+
+.form-sidebar-tip + .form-sidebar-tip {
+  margin-top: var(--space-2);
+}
+
+/* Input row: dua field sejajar */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+}
+
+/* Form actions: tombol submit + batal */
+.form-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding-top: var(--space-5);
+  margin-top: var(--space-5);
+  border-top: 1px solid var(--border-light);
+}
+
+.form-actions--right {
+  justify-content: flex-end;
+}
+
+
+/* ============================================================
+   14. DETAIL PAGES
+============================================================ */
+
+/* Header detail: info utama + tombol aksi */
+.detail-header {
+  background: var(--white);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-xs);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.detail-header__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.detail-header__label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  color: var(--text-tertiary);
+}
+
+.detail-header__title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.detail-header__meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.detail-header__meta-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.detail-header__actions {
+  display: flex;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+/* Danger zone: konfirmasi hapus */
+.danger-zone {
+  background: var(--danger-light);
+  border: 1.5px solid rgba(226, 75, 74, .25);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.danger-zone__text {
+  font-size: 14px;
+  color: #B91C1C;
+  font-weight: 500;
+}
+
+.danger-zone__desc {
+  font-size: 13px;
+  color: #DC2626;
+  margin-top: 2px;
+}
+
+
+/* ============================================================
+   15. RESPONSIVE ≤ 768px — admin halaman
+============================================================ */
+@media (max-width: 768px) {
+
+  /* Stats: 2 kolom di tablet */
+  .stats-grid {
+    --stats-cols: 2;
+  }
+
+  /* Charts: 1 kolom */
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .chart-card--full {
+    grid-column: 1;
+  }
+
+  /* Events grid */
+  .events-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Contacts grid */
+  .contacts-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Budget summary */
+  .budget-summary {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  /* Laporan filter: stack */
+  .laporan-filter {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  /* Laporan summary */
+  .laporan-summary {
+    grid-template-columns: 1fr;
+  }
+
+  /* Form layout: single column */
+  .form-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .form-sidebar-card {
+    position: static;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  /* Detail header: stack */
+  .detail-header {
+    flex-direction: column;
+  }
+
+  .detail-header__actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  /* Event info grid */
+  .event-info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Trx summary */
+  .trx-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .trx-summary__item + .trx-summary__item {
+    border-left: none;
+    border-top: 1px solid var(--border-light);
+    padding-top: var(--space-3);
+  }
+
+  /* Table filter bar */
+  .table-filter-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .table-search {
+    max-width: 100%;
+  }
+
+  .table-result-count {
+    margin-left: 0;
+  }
+
+  /* Page greeting: ukuran lebih kecil di mobile */
+  .page-greeting {
+    font-size: 15px;
+  }
+
+  .page-title {
+    font-size: 22px;
+  }
+
+  /* Laporan: header stack */
+  .laporan-header {
+    flex-direction: column;
+  }
+
+  .laporan-header__actions {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Stats: 1 kolom di ponsel kecil */
+  .stats-grid,
+  .stats-grid--3col {
+    --stats-cols: 1;
+  }
+
+  .budget-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .laporan-filter {
+    grid-template-columns: 1fr;
+  }
+
+  .stat-card__value {
+    font-size: 20px;
+  }
+
+  .admin-content {
+    padding: var(--space-4) var(--space-3);
+  }
+}
+/* Upload area — dipakai di form transaksi admin */
+.upload-area {
+  position: relative;           /* mengurung input[type=file] yang absolute */
+  overflow: hidden;              /* clip input agar tidak keluar batas */
+  border: 2px dashed var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-6);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  background: var(--bg-light);
+  transition: border-color var(--transition-fast), background var(--transition-fast);
+  cursor: pointer;
+}
+
+.upload-area:hover {
+  border-color: var(--primary);
+  background: var(--primary-faint);
+}
+
+.upload-area__icon  { color: var(--text-tertiary); margin-bottom: var(--space-1); }
+.upload-area__text  { font-size: 14px; color: var(--text-secondary); font-weight: 500; }
+.upload-area__hint  { font-size: 12px; color: var(--text-tertiary); }
+
+
+/* ============================================================
+   TIPE TOGGLE — Pemasukan / Pengeluaran switch di form transaksi
+============================================================ */
+.tipe-toggle {
+  display: flex;
+  gap: var(--space-3);
+}
+
+.tipe-toggle__btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 10px 20px;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--border);
+  background: var(--white);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: border-color var(--transition-fast),
+              background var(--transition-fast),
+              color var(--transition-fast),
+              box-shadow var(--transition-fast);
+  user-select: none;
+}
+
+/* Sembunyikan radio asli */
+.tipe-toggle__btn input[type="radio"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.tipe-toggle__btn:hover {
+  border-color: #AEAEB2;
+  background: var(--bg-light);
+}
+
+/* Aktif: Pemasukan → hijau */
+.tipe-toggle__btn--pemasukan.active,
+.tipe-toggle__btn--pemasukan:has(input:checked) {
+  border-color: var(--success);
+  background: rgba(29, 158, 117, .07);
+  color: var(--success);
+  box-shadow: 0 0 0 3px rgba(29, 158, 117, .12);
+}
+
+/* Aktif: Pengeluaran → merah */
+.tipe-toggle__btn--pengeluaran.active,
+.tipe-toggle__btn--pengeluaran:has(input:checked) {
+  border-color: var(--danger);
+  background: rgba(226, 75, 74, .07);
+  color: var(--danger);
+  box-shadow: 0 0 0 3px rgba(226, 75, 74, .12);
+}
+
+/* Fallback untuk browser yang tidak support :has() — pakai JS toggle class */
+.tipe-toggle__btn svg {
+  flex-shrink: 0;
+  transition: color var(--transition-fast);
+}
+
+/* Upload area hover state */
+.upload-area:has(+ input[type="file"]) {
+  cursor: pointer;
+}
+
+
+/* Icon di dalam form-sidebar-tip */
+.form-sidebar-tip__icon {
+  flex-shrink: 0;
+  margin-top: 1px;
+  display: flex;
+  align-items: flex-start;
+}
+
+/* ============================================================
+   PROFIL PAGE
+   Dipakai di admin/profil.php — layout dua kolom, kartu
+   identitas kiri + panel form kanan.
+============================================================ */
+
+/* ── Wrapper utama: 2 kolom ── */
+.profil-layout {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: var(--space-6);
+  align-items: start;
+}
+
+/* ── Kartu identitas (kolom kiri) ── */
+.profil-card {
+  background: var(--white);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-xl);
+  padding: var(--space-8) var(--space-6);
+  box-shadow: var(--shadow-xs);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  position: sticky;
+  top: var(--space-6);
+}
+
+/* Avatar inisial */
+.profil-card__avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: var(--radius-full);
+  background: var(--primary);
+  color: var(--text-inverse);
+  font-size: 30px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--space-2);
+  flex-shrink: 0;
+  letter-spacing: -.02em;
+}
+
+.profil-card__name {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-align: center;
+  line-height: 1.3;
+  margin: 0;
+}
+
+.profil-card__role {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 12px;
+  border-radius: var(--radius-full);
+  background: var(--primary-light);
+  color: var(--primary-dark);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+/* Daftar meta info (email, tanggal bergabung, nama EO) */
+.profil-card__meta {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  border-top: 1px solid var(--border-light);
+  padding-top: var(--space-4);
+  margin-top: var(--space-1);
+}
+
+.profil-card__meta-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.profil-card__meta-item svg {
+  flex-shrink: 0;
+  color: var(--text-tertiary);
+}
+
+/* Statistik ringkas (grid 2 kolom di bawah meta) */
+.profil-card__stats {
+  width: 100%;
+  border-top: 1px solid var(--border-light);
+  padding-top: var(--space-4);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+}
+
+.profil-card__stat {
+  text-align: center;
+}
+
+.profil-card__stat-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.2;
+  margin: 0 0 2px;
+}
+
+.profil-card__stat-label {
+  font-size: 11px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  margin: 0;
+}
+
+/* ── Panel form (kolom kanan) ── */
+.profil-form-card {
+  background: var(--white);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-xl);
+  padding: var(--space-8);
+  box-shadow: var(--shadow-xs);
+}
+
+.profil-form-card__title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 var(--space-5);
+}
+
+.profil-form-card__divider {
+  border: none;
+  border-top: 1px solid var(--border-light);
+  margin: 0 0 var(--space-6);
+}
+
+.profil-form-card__section {
+  margin-bottom: var(--space-8);
+}
+
+/* ── Input readonly ── */
+.form-input--readonly {
+  background: var(--bg-light);
+  color: var(--text-secondary);
+  cursor: not-allowed;
+  border-color: var(--border-light);
+}
+
+.form-readonly-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-tertiary);
+  line-height: 1.4;
+  margin-top: 4px;
+}
+
+.form-readonly-note svg {
+  flex-shrink: 0;
+  margin-top: 1px;
+  color: var(--text-tertiary);
+}
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .profil-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .profil-card {
+    position: static;
+  }
+
+  .profil-card__stats {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .profil-form-card {
+    padding: var(--space-5) var(--space-4);
+  }
+
+  .profil-card__stats {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* ============================================================
+   EVENT DETAIL PAGE — admin/events/detail.php
+   Kelas-kelas ini sama dengan staff.css agar tampilan
+   halaman detail event konsisten di kedua peran.
+============================================================ */
+
+/* Grid dua kolom: konten utama + aside sticky */
+.event-detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: var(--space-5);
+  align-items: flex-start;
+}
+
+.event-detail-grid__main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.event-detail-grid__aside {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  position: sticky;
+  top: var(--space-6);
+}
+
+/* Kartu informasi event */
+.event-info-card {
+  background: var(--white);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  box-shadow: var(--shadow-xs);
+}
+
+.event-info-card__title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-4);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--border-light);
+}
+
+/* List field label–value */
+.event-info-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.event-info-list__item {
+  display: grid;
+  grid-template-columns: 130px 1fr;
+  gap: var(--space-2);
+  font-size: 14px;
+}
+
+.event-info-list__label {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.event-info-list__value {
+  color: var(--text-primary);
+}
+
+/* Section header dengan link aksi */
+.section-header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-3);
+}
+
+.section-header-bar__title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.section-header-bar__link {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.section-header-bar__link:hover {
+  text-decoration: underline;
+}
+
+/* Responsive ≤ 768px */
+@media (max-width: 768px) {
+  .event-detail-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .event-detail-grid__aside {
+    position: static;
+  }
+
+  .event-info-list__item {
+    grid-template-columns: 110px 1fr;
+  }
+}

@@ -1,0 +1,25 @@
+# ── Environment / secrets ────────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+
+# ── OS junk ──────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+__MACOSX/
+
+# ── Editor / IDE ─────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+
+# ── Logs ─────────────────────────────────────────────────────────────────
+*.log
+error_log
+
+# ── Dependencies (jika nanti pakai Composer) ────────────────────────────
+vendor/
+
+# ── Uploads / file sementara (jika nanti dipakai lagi) ──────────────────
+uploads/
+tmp/
